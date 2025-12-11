@@ -31,7 +31,7 @@ if (isDev) {
   const safeStreamName = "AppStream-" + new Date().toISOString().replace(/:/g, "-");
   transports.push(
     new WinstonCloudwatch({
-      logGroupName: "Cbus-Customer-Explorer-API",
+      logGroupName: "Cbus-CustomerExplorer-API",
       logStreamName: safeStreamName,
       awsRegion: "ap-southeast-2",
       jsonMessage: true,

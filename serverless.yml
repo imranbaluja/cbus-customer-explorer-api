@@ -1,4 +1,4 @@
-service: cbus-customer-explorer-api
+service: cbus-customerexplorer-api
 
 frameworkVersion: "~4"
 
