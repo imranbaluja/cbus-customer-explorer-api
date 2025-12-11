@@ -1,4 +1,4 @@
-service: cbus-customerexplorer-api
+service: cbus-customer-explorer-api
 
 frameworkVersion: "~4"
 
@@ -16,6 +16,18 @@ provider:
     SERVICE_NAME: ${self:service}
     AWS_ACCOUNT_ID: ${env:AWS_ACCOUNT_ID}
     AWSREGION: ${env:AWSREGION}
+    iam:
+      role:
+        statements:
+          - Effect: Allow
+            Action:
+              - logs:CreateLogGroup
+              - logs:CreateLogStream
+              - logs:PutLogEvents
+              - dynamodb:*
+              - s3:*
+            Resource: "*"
+        name: cbus-cust-exp-lambda-exec
 
 functions:
   api:
@@ -38,6 +50,33 @@ package:
 
 plugins:
   - serverless-dotenv-plugin
+
+resources:
+  Resources:
+    IamRoleLambdaExecution:
+      Type: AWS::IAM::Role
+      Properties:
+        RoleName: cbus-cust-exp-lambda-exec
+        AssumeRolePolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service:
+                  - lambda.amazonaws.com
+              Action:
+                - sts:AssumeRole
+        Policies:
+          - PolicyName: LambdaBasicExecution
+            PolicyDocument:
+              Version: "2012-10-17"
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - logs:CreateLogGroup
+                    - logs:CreateLogStream
+                    - logs:PutLogEvents
+                  Resource: "*"
 
 build:
   esbuild:

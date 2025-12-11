@@ -50,4 +50,4 @@ jobs:
           NODE_ENV: ${{ vars.NODE_ENV }}
         run: |
           export SERVERLESS_ACCESS_KEY=${{ secrets.SERVERLESS_ACCESS_KEY }}
-          serverless deploy --app cbus-customerexplorer-api
+          serverless deploy --app cbus-customer-explorer-api
