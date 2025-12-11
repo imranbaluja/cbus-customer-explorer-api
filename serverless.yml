@@ -1,0 +1,68 @@
+service: cbus-customer-explorer-api
+
+frameworkVersion: "~4"
+
+provider:
+  name: aws
+  runtime: nodejs24.x
+  region: ap-southeast-2
+  memorySize: 256
+  timeout: 20
+  stage: ${env:ENV_SHORT, 'dev'}-${self:service}
+  stackName: ${env:ENV_SHORT, 'dev'}-${self:service}
+  environment:
+    NODE_ENV: ${env:NODE_ENV, 'development'}
+    ENV_SHORT: ${env:ENV_SHORT, 'dev'}
+    SERVICE_NAME: ${self:service}
+    AWS_ACCOUNT_ID: ${env:AWS_ACCOUNT_ID}
+    AWSREGION: ${env:AWSREGION}
+
+functions:
+  api:
+    name: ${env:ENV_SHORT,'dev'}-${self:service}
+    handler: dist/lambda.handler
+    events:
+      - http:
+          path: /
+          method: any
+          cors: true
+      - http:
+          path: "{proxy+}"
+          method: any
+          cors: true
+package:
+  individually: true
+  excludeDevDependencies: true
+  include:
+    - package.json
+
+plugins:
+  - serverless-dotenv-plugin
+
+build:
+  esbuild:
+    bundle: true
+    target: node20
+    minify: false
+    exclude:
+      - aws-sdk
+      - mock-aws-s3
+      - "@nestjs/websockets/socket-module"
+      - class-transformer/storage
+      - "@nestjs/microservices"
+      - "@nestjs/websockets/socket-module"
+      - "@nestjs/microservices/microservices-module"
+
+    external:
+      - aws-sdk
+      - mock-aws-s3
+      - "@nestjs/websockets/socket-module"
+      - class-transformer/storage
+      - "@nestjs/microservices"
+      - "@nestjs/websockets/socket-module"
+      - "@nestjs/microservices/microservices-module"
+      - nock
+      - "@fastify/static"
+
+    loader:
+      ".html": "text"
