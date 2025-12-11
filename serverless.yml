@@ -16,18 +16,6 @@ provider:
     SERVICE_NAME: ${self:service}
     AWS_ACCOUNT_ID: ${env:AWS_ACCOUNT_ID}
     AWSREGION: ${env:AWSREGION}
-    iam:
-      role:
-        statements:
-          - Effect: Allow
-            Action:
-              - logs:CreateLogGroup
-              - logs:CreateLogStream
-              - logs:PutLogEvents
-              - dynamodb:*
-              - s3:*
-            Resource: "*"
-        name: cbus-cust-exp-lambda-exec
 
 functions:
   api:
