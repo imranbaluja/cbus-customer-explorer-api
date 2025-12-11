@@ -1,0 +1,53 @@
+name: CI/CD - Deploy Serverless
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    environment: tst-a
+
+    steps:
+      # Step 1 — Checkout code
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Step 2 — Setup Node.js 24.x
+      - name: Use Node.js 24.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24.x"
+          cache: "npm"
+
+      # Step 3 — Install dependencies
+      - name: Install dependencies
+        run: npm ci
+
+      # Step 4 — Run tests (optional, recommended)
+      - name: Run unit tests
+        run: npm test --if-present
+
+      # Step 5 — Build NestJS (produces dist folder)
+      - name: Build project
+        run: npm run build
+
+      # Step 6 — Install Serverless Framework v4
+      - name: Install Serverless Framework
+        run: npm install -g serverless@4
+
+      # Step 7 — Serverless deploy
+      - name: Deploy with Serverless Framework v4
+        env:
+          SERVERLESS_ACCESS_KEY: ${{ secrets.SERVERLESS_ACCESS_KEY }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_ACCOUNT_ID: ${{ vars.AWS_ACCOUNT_ID }}
+          AWSREGION: ${{ vars.AWSREGION }}
+          ENV_SHORT: ${{ vars.ENV_SHORT }}
+          NODE_ENV: ${{ vars.NODE_ENV }}
+        run: |
+          export SERVERLESS_ACCESS_KEY=${{ secrets.SERVERLESS_ACCESS_KEY }}
+          serverless deploy --app cbus-customer-explorer-api
