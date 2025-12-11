@@ -1,7 +1,7 @@
 {
   "name": "cbus-customer-explorer-api",
   "version": "1.0.0",
-  "description": "NestJS backend for Customer Data Explorer coding challenge (JSON file datasource).",
+  "description": "NestJS backend for Customer Explorer coding challenge (JSON file datasource).",
   "main": "dist/lambda.js",
   "scripts": {
     "build": "tsc -p tsconfig.json",
