@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { Customer } from "./interfaces/customer.interface";
 import * as fs from "fs";
 import * as path from "path";
+import { CustomerSeachResponseDto } from "./dto/customerSeachResponse.dto";
 
 @Injectable()
 export class CustomerService {
@@ -82,7 +83,7 @@ export class CustomerService {
     dateFrom?: string;
     dateTo?: string;
     emailDomain?: string;
-  }) {
+  }): Promise<CustomerSeachResponseDto> {
     const { page = 1, limit = 10, search, sort, order = "asc", dateFrom, dateTo, emailDomain } = query;
 
     const cacheKey = JSON.stringify({ page, limit, search, sort, order, dateFrom, dateTo, emailDomain });

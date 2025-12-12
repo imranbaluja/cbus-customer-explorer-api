@@ -43,4 +43,10 @@ export async function setupApp(app: INestApplication, stage: string, enableSwagg
 
   app.useGlobalInterceptors(new LoggingInterceptor(), new CacheControlInterceptor());
   app.useGlobalFilters(new ValidationExceptionFilter(), new HttpExceptionFilter(), new AllExceptionsFilter());
+  app.enableCors({
+    origin: "*",
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
+    preflightContinue: false,
+    optionsSuccessStatus: 204,
+  });
 }
